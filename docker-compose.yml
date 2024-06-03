@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:16.2-alpine3.19
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./migrations:/docker-entrypoint-initdb.d  # Монтируем директорию миграций в контейнер
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+  fastapi:
+    build: .
+    container_name: fastapi-bec
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - my_network
+
+networks:
+  my_network:
+
+volumes:
+  pgdata:
+    driver: local
