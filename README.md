@@ -9,10 +9,6 @@
 docker compose up --build
 
 GET запрос к сервису: http://localhost:8000/session_get
-(localhost заменить на ip сервера, где запущены контейнеры.)
 
 
 POST запрос к сервису: http://localhost:8000/session_create
-
-
-Файл .env убран из репозитория в целях безопасности.
